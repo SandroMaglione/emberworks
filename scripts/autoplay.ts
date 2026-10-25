@@ -24,7 +24,9 @@ for (const level of LEVELS) {
   const solution = solve(level, 1).solutions[0]?.rotations
   if (solution === undefined) throw new Error(`${level.id} has no solution`)
   await page.goto(`${base}/?all&chamber=${level.id}`)
-  await page.waitForTimeout(350)
+  // Wait for the chamber to be on screen: over the network the page takes longer than locally.
+  await page.locator(".bar .title", { hasText: level.name }).waitFor()
+  await page.waitForTimeout(400)
   const layout = layoutFor(level, viewport.width, viewport.height)
   const start = startRotations(level)
   let taps = 0
