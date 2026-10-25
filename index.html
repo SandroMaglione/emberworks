@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <title>Emberworks</title>
+    <style>
+      :root {
+        --slate: #1b1e24;
+        --slate-2: #23272f;
+        --brass: #c99a3b;
+        --brass-dim: #8a6a2a;
+        --brass-bright: #f0c86a;
+        --ember: #ff7a1a;
+        --glow: #ffd27a;
+        --ink: #0d0f13;
+        --paper: #ece3cf;
+        --muted: #8b8f99;
+        --red: #ff4d5e;
+        --geo: "Futura", "Avenir Next", "Century Gothic", "Trebuchet MS", ui-sans-serif, sans-serif;
+        font-family: var(--geo);
+      }
+      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      html, body { margin: 0; height: 100%; background: var(--slate); color: var(--paper); overflow: hidden; }
+      body { touch-action: none; user-select: none; -webkit-user-select: none; }
+      #app { position: fixed; inset: 0; }
+      #app canvas { display: block; }
+      #hud { position: fixed; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+      #hud > * { pointer-events: auto; }
+      .bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; gap: 12px; }
+      .bar .title { text-align: center; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px; color: var(--brass); }
+      .bar .title b { display: block; font-size: 16px; color: var(--paper); letter-spacing: 0.04em; text-transform: none; margin-top: 2px; }
+      .bar .group { display: flex; gap: 8px; }
+      button { font: inherit; }
+      .btn {
+        appearance: none; border: 1.5px solid var(--brass-dim); background: rgba(13, 15, 19, 0.6); color: var(--paper);
+        border-radius: 999px; padding: 9px 14px; font-size: 13px; letter-spacing: 0.06em; cursor: pointer; min-width: 44px; min-height: 40px;
+        transition: transform 80ms ease, border-color 120ms ease, background 120ms ease, opacity 120ms ease;
+      }
+      .btn:hover { border-color: var(--brass); }
+      .btn:active { transform: scale(0.96); }
+      .btn:disabled { opacity: 0.35; cursor: default; }
+      .btn kbd { font-family: inherit; opacity: 0.55; margin-left: 6px; font-size: 11px; }
+      .foot { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 18px 22px; }
+      .lever {
+        appearance: none; border: 2px solid var(--brass); background: linear-gradient(180deg, #2c2a22, #16161a);
+        color: var(--brass-bright); border-radius: 14px; padding: 14px 36px; font-size: 16px; letter-spacing: 0.22em; text-transform: uppercase;
+        cursor: pointer; box-shadow: 0 0 0 0 rgba(255, 122, 26, 0); transition: box-shadow 200ms ease, transform 80ms ease, color 120ms ease, border-color 120ms ease;
+        min-height: 54px;
+      }
+      .lever:hover { box-shadow: 0 0 24px 2px rgba(255, 122, 26, 0.25); }
+      .lever:active { transform: translateY(2px); }
+      .lever.down { color: var(--muted); border-color: var(--brass-dim); }
+      .lever.next { color: var(--glow); border-color: var(--glow); box-shadow: 0 0 28px 4px rgba(255, 210, 122, 0.25); }
+      .note { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; min-height: 18px; text-align: center; }
+      .note .fault { color: var(--red); }
+      .note .warm { color: var(--glow); }
+      .hidden { display: none !important; }
+
+      #shell { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 30%, #2a2d36 0%, var(--slate) 70%); overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+      #shell .inner { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+      #shell h1 { font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase; color: var(--brass-bright); text-align: center; margin: 0 0 6px; font-size: 26px; }
+      #shell .sub { text-align: center; color: var(--muted); font-size: 13px; letter-spacing: 0.08em; margin-bottom: 36px; }
+      .room { position: relative; border: 1.5px solid var(--brass-dim); border-radius: 18px; padding: 18px 18px 18px 22px; margin-bottom: 22px; background: rgba(13, 15, 19, 0.45); display: grid; grid-template-columns: 76px 1fr; gap: 16px; align-items: center; }
+      .room.locked { opacity: 0.45; }
+      .room .gear { width: 76px; height: 76px; }
+      .room .gear svg { width: 100%; height: 100%; display: block; }
+      .room.awake .gear svg { animation: spin 9s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .room h2 { margin: 0 0 10px; font-weight: 500; font-size: 15px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brass); }
+      .ports { display: flex; flex-wrap: wrap; gap: 10px; }
+      .port {
+        appearance: none; width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--brass-dim); background: #141619; color: var(--muted);
+        font-size: 15px; cursor: pointer; display: grid; place-items: center; position: relative; transition: transform 80ms ease, box-shadow 160ms ease;
+      }
+      .port:hover { transform: scale(1.05); }
+      .port.open { border-color: var(--brass); color: var(--paper); }
+      .port.solved { border-color: var(--glow); color: var(--ink); background: radial-gradient(circle at 50% 45%, #fff1c2 0%, var(--glow) 55%, #c8902a 100%); box-shadow: 0 0 18px rgba(255, 210, 122, 0.35); }
+      .port.locked { cursor: default; opacity: 0.5; }
+      .port.current { box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.5); }
+      .conduit { position: absolute; left: 50%; bottom: -24px; width: 3px; height: 24px; background: var(--brass-dim); transform: translateX(-50%); }
+      .room.awake .conduit { background: var(--glow); box-shadow: 0 0 10px rgba(255, 210, 122, 0.6); }
+      .room:last-child .conduit { display: none; }
+      #shell .how { color: var(--muted); font-size: 13px; line-height: 1.6; text-align: center; margin-top: 30px; }
+      #shell .how b { color: var(--paper); font-weight: 500; }
+      @media (max-width: 520px) {
+        .bar { padding: 10px 12px; }
+        .bar .title b { font-size: 14px; }
+        .btn { padding: 8px 10px; font-size: 12px; }
+        .btn kbd { display: none; }
+        .lever { padding: 12px 28px; font-size: 14px; }
+        .room { grid-template-columns: 56px 1fr; padding: 14px; }
+        .room .gear { width: 56px; height: 56px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="hud"></div>
+    <div id="shell"></div>
+    <script type="module" src="/src/host/main.ts"></script>
+  </body>
+</html>

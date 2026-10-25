@@ -1,0 +1,33 @@
+{
+  "name": "emberworks",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.17.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json --pretty false",
+    "lint": "oxlint src test",
+    "lint:sim": "ritmo-devtools lint src/sim/simulation.ts",
+    "test": "node --test \"test/*.test.ts\"",
+    "check": "pnpm typecheck && pnpm lint && pnpm lint:sim && pnpm test",
+    "release": "pnpm --dir deploy release"
+  },
+  "dependencies": {
+    "@typeonce/ritmo": "^0.15.0",
+    "@typeonce/ritmo-browser": "^0.15.0",
+    "@typeonce/ritmo-math": "^0.15.0",
+    "@typeonce/ritmo-pixi": "^0.15.0",
+    "@typeonce/ritmo-render": "^0.15.0",
+    "pixi.js": "^8.22.0"
+  },
+  "devDependencies": {
+    "@typeonce/oxlint-plugin-ritmo": "^0.15.0",
+    "@typeonce/ritmo-devtools": "^0.15.0",
+    "@types/node": "^26.6.5",
+    "oxlint": "^1.89.0",
+    "playwright": "^1.64.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}
