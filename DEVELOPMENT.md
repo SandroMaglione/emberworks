@@ -80,9 +80,10 @@ pnpm release --profile admin --yes --no-input
 
 Release from an up-to-date `main`. The release command runs the game's check
 and the deployment config's types, then Alchemy builds and deploys the game
-to <https://emberworks.typeonce.dev>. Alchemy attaches that custom domain to
+to <https://emberworks.typeonce.games>. Alchemy attaches that custom domain to
 the `prod` Worker and creates its DNS record and certificate in the
-`typeonce.dev` Cloudflare zone.
+`typeonce.games` Cloudflare zone. The old address,
+<https://emberworks.typeonce.dev>, 301s to it.
 
 `admin` is the existing local Alchemy Cloudflare profile. On another machine,
 use your own logged-in profile or set `CLOUDFLARE_ACCOUNT_ID` and
