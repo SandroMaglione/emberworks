@@ -6,7 +6,7 @@ every socket is struck, then pull the lever. The ember fires, sparks race
 down the arms, and if you reasoned right the whole chamber lights up in one
 cascade.
 
-**[Play it in your browser at emberworks.typeonce.dev](https://emberworks.typeonce.dev)**
+**[Play it in your browser at emberworks.typeonce.games](https://emberworks.typeonce.games)**
 
 ![A chamber of the Flywheel mid-cascade: two embers burning, sparks racing along the arms, relays lighting in waves](docs/screenshots/cascade.webp)
 
@@ -70,7 +70,7 @@ It plays on a phone too: tap to turn, hold to lock a relay in place.
 
 ## Play
 
-**[emberworks.typeonce.dev](https://emberworks.typeonce.dev)**. Progress
+**[emberworks.typeonce.games](https://emberworks.typeonce.games)**. Progress
 stays in your browser. To run it locally:
 
 ```sh
